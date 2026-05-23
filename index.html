@@ -1,0 +1,495 @@
+<!DOCTYPE html>  
+<html lang="pt-br">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+    <title>WR Acessórios Mobile - Loja Virtual</title>  
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  
+    <style>  
+        :root {  
+            --primary-color: #1e3a8a;  
+            --accent-color: #22c55e;  
+            --whatsapp-color: #25D366;  
+            --background-body: #f8fafc;  
+            --text-main: #0f172a;  
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.06);  
+        }  
+  
+        * { box-sizing: border-box; }  
+        body {   
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;   
+            margin: 0; background-color: var(--background-body); color: var(--text-main);   
+            scroll-behavior: smooth;  
+        }  
+  
+        /* HEADER */  
+        header {   
+            background-color: var(--primary-color); color: white; padding: 1rem;   
+            display: flex; flex-direction: column; align-items: center;  
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15);  
+        }  
+        .header-title-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+        header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 1px; font-weight: 800; }  
+        .adm-trigger { opacity: 0.1; font-size: 18px; color: white; background: none; border: none; cursor: pointer; }
+        nav ul { list-style: none; margin: 10px 0 0 0; padding: 0; display: flex; gap: 15px; }  
+        nav a { text-decoration: none; color: #cbd5e1; font-weight: 500; font-size: 0.9rem; }  
+  
+        /* HERO */  
+        .hero {  
+            background: linear-gradient(rgba(30, 58, 138, 0.75), rgba(30, 58, 138, 0.75)), url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1400&q=80');  
+            background-size: cover; background-position: center; height: 160px; color: white;   
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;  
+            padding: 0 15px;  
+        }  
+        .hero h2 { font-size: 1.4rem; margin-bottom: 5px; }  
+  
+        /* VITRINE */  
+        .section-title { text-align: center; margin: 30px 0 15px; font-size: 1.4rem; color: var(--primary-color); font-weight: 800; }  
+        .vitrine { display: grid; grid-template-columns: 1fr; padding: 15px; gap: 20px; max-width: 1200px; margin: 0 auto; }  
+  
+        /* PRODUTOS */  
+        .produto-card {  
+            background: white; border-radius: 20px; box-shadow: var(--card-shadow);  
+            padding: 15px; text-align: center; display: flex; flex-direction: column; position: relative;  
+            border: 1px solid #e2e8f0;  
+        }  
+        .produto-card h3 { font-size: 1.1rem; margin: 12px 0 6px 0; color: var(--text-main); }  
+        .carrossel-container { position: relative; width: 100%; overflow: hidden; border-radius: 12px; }  
+        .carrossel-wrapper { display: flex; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }  
+        .carrossel-wrapper img { width: 100%; flex-shrink: 0; height: 220px; object-fit: contain; cursor: pointer; padding: 10px; background: #f8fafc; }  
+  
+        .nav-btn {  
+            position: absolute; top: 50%; transform: translateY(-50%);  
+            background: rgba(255,255,255,0.9); color: #333; border: none; border-radius: 50%;  
+            width: 35px; height: 35px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center;  
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);  
+        }  
+        .prev { left: 5px; } .next { right: 5px; }  
+  
+        .dots-container { display: flex; justify-content: center; gap: 6px; margin: 12px 0; }  
+        .dot { width: 7px; height: 7px; background: #ddd; border-radius: 50%; transition: 0.3s; }  
+        .dot.active { background: var(--primary-color); width: 15px; border-radius: 4px; }  
+  
+        /* PREÇOS */  
+        .preco { color: var(--accent-color); font-size: 1.5rem; font-weight: 800; margin: 5px 0; }  
+        .parcelas-info { color: #64748b; font-size: 0.85rem; margin-bottom: 15px; background: #f1f5f9; padding: 6px; border-radius: 8px; font-weight: 500; }  
+          
+        .btn-comprar {   
+            display: flex; align-items: center; justify-content: center; gap: 8px;  
+            background-color: var(--primary-color); color: white; padding: 14px; text-decoration: none;   
+            border-radius: 12px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; font-size: 0.95rem;  
+        }  
+  
+        /* MODAIS */  
+        .modal-checkout {   
+            display: none; position: fixed; z-index: 3000; left: 0; top: 0;   
+            width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6);   
+            backdrop-filter: blur(4px); overflow-y: auto;   
+        }  
+        .form-container {   
+            background: white; padding: 25px; border-radius: 24px;   
+            width: 95%; max-width: 450px; margin: 40px auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);  
+        }  
+        .form-container h2 { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; color: #1a1a1a; }  
+          
+        .form-group { margin-bottom: 15px; text-align: left; }  
+        .form-group label { display: block; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; color: #64748b; }  
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; background: #f8fafc; }  
+  
+        /* PAINEL GERENCIADOR ADM */
+        .adm-box { max-width: 600px !important; }
+        .adm-prod-row { border-bottom: 1px dashed #cbd5e1; padding: 15px 0; }
+        .adm-prod-row h4 { margin: 0 0 10px 0; color: var(--primary-color); }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+  
+        @media (min-width: 600px) { .vitrine { grid-template-columns: repeat(2, 1fr); } }  
+        @media (min-width: 1000px) { .vitrine { grid-template-columns: repeat(3, 1fr); } }  
+    </style>  
+</head>  
+<body>  
+  
+<header>  
+    <div class="header-title-container" onclick="contarCliquesAdm()">
+        <h1>WR ACESSÓRIOS MOBILE</h1>   
+        <button class="adm-trigger" onclick="forçarLoginAdm(event)"><span class="material-icons">settings</span></button>
+    </div>
+    <nav>  
+        <ul>  
+            <li><a href="#home">Início</a></li>  
+            <li><a href="#vitrine-produtos">Produtos</a></li>  
+        </ul>  
+    </nav>  
+</header>  
+  
+<section class="hero" id="home">  
+    <h2>Os Melhores Acessórios Para Seu Smartphone</h2>  
+    <p>Qualidade, garantia e entrega rápida</p>  
+</section>  
+  
+<h2 class="section-title" id="vitrine-produtos">Catálogo de Destaques</h2>  
+<div class="vitrine" id="container-vitrine-html">  
+    </div>  
+  
+<div id="modalImagem" class="modal-checkout" onclick="fecharImagem()">  
+    <span style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>  
+    <button class="nav-btn prev" onclick="mudarImagemZoom(-1, event)" style="left: 20px; z-index: 3010; width: 45px; height: 45px;">  
+        <span class="material-icons">chevron_left</span>  
+    </button>  
+    <img id="imgZoom" src="" style="max-width:90%; max-height:80%; border-radius:10px; box-shadow: 0 0 20px rgba(0,0,0,0.5);" onclick="event.stopPropagation()">  
+    <button class="nav-btn next" onclick="mudarImagemZoom(1, event)" style="right: 20px; z-index: 3010; width: 45px; height: 45px;">  
+        <span class="material-icons">chevron_right</span>  
+    </button>  
+</div>  
+  
+<div id="modalCheckout" class="modal-checkout">  
+  <div class="form-container">  
+    <h2 id="titulo-checkout">Detalhes do Pedido</h2>  
+    <p id="resumo-valor" style="font-weight:bold; margin:10px 0 15px;"></p>  
+  
+    <div id="area-escolha-pagamento">  
+      <div class="form-group">  
+        <label>Forma de Pagamento Preferida</label>  
+        <select id="metodo_pagamento">  
+          <option value="pix">Pix (Aprovação Imediata)</option>  
+          <option value="cartao">Cartão de Crédito</option>  
+          <option value="dinheiro">Dinheiro / Retirada</option>  
+        </select>  
+      </div>  
+      <button onclick="processarPagamento()" style="width:100%; padding:14px; border:none; border-radius:10px; background:var(--primary-color); color:#fff; font-weight:bold; cursor:pointer;">  
+        Avançar para o Link / Código
+      </button>  
+    </div>  
+  
+    <div id="area-pix" style="display:none; text-align:center; padding-top:10px; border-top: 1px solid #eee;">  
+      <p style="color:var(--accent-color); font-weight:bold; margin: 0 0 10px 0;">Utilize o QR Code para pagar:</p>  
+      <img id="qrcode-pix" src="" alt="QR Code Pix" style="width:180px; height:180px; margin: 0 auto; border-radius: 10px; border: 2px solid #f4f7f6;">  
+      <p style="font-size: 0.8rem; margin: 15px 0 5px; color: #555;">Ou utilize o Copia e Cola:</p>  
+      <input type="text" id="codigo-pix-input" readonly style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px; font-size:12px; color: #777; background: #f9f9f9;">  
+      <button onclick="copiarPix()" style="width:100%; padding:12px; background:#1a1a1a; color:#fff; font-weight:bold; border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">  
+        <span class="material-icons">content_copy</span> COPIAR CÓDIGO PIX  
+      </button>  
+    </div>  
+  
+    <button onclick="enviarComprovanteWhatsApp()" style="width:100%; padding:14px; border:none; border-radius:10px; background:var(--whatsapp-color); color:#fff; font-weight:bold; margin-top:15px; cursor:pointer;">  
+      Concluir e Enviar no WhatsApp  
+    </button>  
+  
+    <button onclick="fecharCheckout()" style="width:100%; padding:10px; border:none; border-radius:10px; background:none; color:#999; font-size:0.8rem; cursor:pointer;">  
+      Voltar para o catálogo  
+    </button>  
+  </div>  
+</div>  
+  
+<div id="modalAdm" class="modal-checkout">
+  <div class="form-container adm-box">
+    <h2>Painel do Administrador WR</h2>
+    <div id="lista-produtos-adm" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;"></div>
+    
+    <button onclick="salvarConfigAdm()" style="width:100%; padding:12px; background:var(--accent-color); color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">💾 SALVAR ALTERAÇÕES</button>
+    <button onclick="exportarCodigoCompleto()" style="width:100%; padding:12px; background:#475569; color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">📋 EXPORTAR CÓDIGO PARA O GITHUB</button>
+    <button onclick="fecharAdm()" style="width:100%; padding:8px; background:none; border:none; color:#64748b; cursor:pointer;">Fechar Painel</button>
+  </div>
+</div>
+
+<script>  
+  // BANCO DE DADOS LOCAL DOS PRODUTOS (Pode ser alterado totalmente pelo painel)
+  let dbProdutos = [
+    {
+      id: "carregador20w",
+      nome: "Carregador Turbo 20W Type-C",
+      preco: "59,90",
+      info: "Garantia de alta performance",
+      imagens: ["carregador20w_1.webp", "carregador20w_2.webp"],
+      linkCartao: "",
+      linkPix: ""
+    },
+    {
+      id: "carregadoragold",
+      nome: "Carregador Completo aGold",
+      preco: "99,90",
+      info: "Acompanha cabo reforçado",
+      imagens: ["carregador-agold.jpeg"],
+      linkCartao: "",
+      linkPix: ""
+    },
+    {
+      id: "caboreforcado",
+      nome: "Cabo Reforçado de Nylon",
+      preco: "29,90",
+      info: "Alta durabilidade e velocidade",
+      imagens: ["cabo_reforcado.webp"],
+      linkCartao: "",
+      linkPix: ""
+    },
+    {
+      id: "capamagsafe",
+      nome: "Capa MagSafe Premium",
+      preco: "105,90",
+      info: "Proteção contra impactos com magnetismo",
+      imagens: ["capa-magsafe-iphone-17pro.webp"],
+      linkCartao: "",
+      linkPix: ""
+    }
+  ];
+
+  // Estado dos carrosséis
+  let carrosselEstado = {};  
+  let produtoZoomAtivo = "";  
+  let indexZoomAtivo = 0;  
+  let produtoAtivoId = "";  
+  let cliquesTitulo = 0;
+
+  // Inicialização do Sistema
+  function carregarSistema() {
+    if(localStorage.getItem('wr_produtos_db')) {
+        dbProdutos = JSON.parse(localStorage.getItem('wr_produtos_db'));
+    }
+    renderizarVitrine();
+  }
+
+  function renderizarVitrine() {
+    const vitrine = document.getElementById('container-vitrine-html');
+    vitrine.innerHTML = "";
+    
+    dbProdutos.forEach(p => {
+        carrosselEstado[p.id] = { current: 0, total: p.imagens.length };
+        
+        let imgsHtml = "";
+        p.imagens.forEach((imgSrc) => {
+            imgsHtml += `<img src="${imgSrc}" alt="${p.nome}" onclick="abrirImagem('${p.id}', ${p.imagens.indexOf(imgSrc)})">`;
+        });
+
+        const card = document.createElement('div');
+        card.className = "produto-card";
+        card.id = p.id;
+        card.innerHTML = `
+            <div class="carrossel-container">  
+                <button class="nav-btn prev" onclick="moveSlide('${p.id}', -1)"><span class="material-icons">chevron_left</span></button>  
+                <div class="carrossel-wrapper" style="transform: translateX(0%);">  
+                    ${imgsHtml}
+                </div>  
+                <button class="nav-btn next" onclick="moveSlide('${p.id}', 1)"><span class="material-icons">chevron_right</span></button>  
+            </div>  
+            <div class="dots-container" id="dots-${p.id}"></div>  
+            <h3>${p.nome}</h3>  
+            <p class="preco">R$ ${p.preco}</p>  
+            <div class="parcelas-info">${p.info}</div>  
+            <button class="btn-comprar" onclick="abrirCheckout('${p.id}')">  
+                <span class="material-icons">shopping_cart</span> ADQUIRIR AGORA  
+            </button>
+        `;
+        vitrine.appendChild(card);
+        atualizarDots(p.id);
+    });
+  }
+
+  function moveSlide(id, step) {  
+    const c = carrosselEstado[id];  
+    if(!c || c.total <= 1) return;
+    c.current = (c.current + step + c.total) % c.total;  
+    document.querySelector(`#${id} .carrossel-wrapper`).style.transform = `translateX(-${c.current * 100}%)`;  
+    atualizarDots(id);
+  }  
+
+  function atualizarDots(id) {
+    const dotsContainer = document.getElementById(`dots-${id}`);
+    if(!dotsContainer) return;
+    dotsContainer.innerHTML = "";
+    const c = carrosselEstado[id];
+    for (let i = 0; i < c.total; i++) {  
+        const dot = document.createElement('div');  
+        dot.className = `dot ${i === c.current ? 'active' : ''}`;  
+        dotsContainer.appendChild(dot);  
+    }
+  }
+
+  function abrirImagem(id, index) {  
+      produtoZoomAtivo = id;  
+      indexZoomAtivo = index;  
+      const modal = document.getElementById('modalImagem');  
+      const img = document.getElementById('imgZoom');  
+      modal.style.display = 'flex';  
+        
+      const prod = dbProdutos.find(p => p.id === id);
+      img.src = prod.imagens[index];  
+  }  
+  
+  function fecharImagem() {  
+      document.getElementById('modalImagem').style.display = 'none';  
+  }  
+  
+  function mudarImagemZoom(step, event) {  
+      if (event) event.stopPropagation();  
+      const c = carrosselEstado[produtoZoomAtivo];  
+      indexZoomAtivo = (indexZoomAtivo + step + c.total) % c.total;  
+        
+      const prod = dbProdutos.find(p => p.id === produtoZoomAtivo);
+      document.getElementById('imgZoom').src = prod.imagens[indexZoomAtivo];  
+        
+      c.current = indexZoomAtivo;  
+      document.querySelector(`#${produtoZoomAtivo} .carrossel-wrapper`).style.transform = `translateX(-${c.current * 100}%)`;  
+      atualizarDots(produtoZoomAtivo);
+  }  
+  
+  function abrirCheckout(id) {  
+    const prod = dbProdutos.find(p => p.id === id);
+    produtoAtivoId = id;  
+    document.getElementById('titulo-checkout').innerText = prod.nome;  
+    document.getElementById('resumo-valor').innerText = "Valor: R$ " + prod.preco;  
+    document.getElementById('metodo_pagamento').value = "pix";  
+    document.getElementById('area-escolha-pagamento').style.display = 'block';  
+    document.getElementById('area-pix').style.display = 'none';  
+    document.getElementById('modalCheckout').style.display = 'block';  
+  }  
+  
+  function fecharCheckout() {  
+    document.getElementById('modalCheckout').style.display = 'none';  
+  }  
+  
+  function processarPagamento() {  
+    const prod = dbProdutos.find(p => p.id === produtoAtivoId);
+    const metodoAtivo = document.getElementById('metodo_pagamento').value;  
+    
+    if (metodoAtivo === "cartao") {  
+      if (!prod.linkCartao || prod.linkCartao.trim() === "") {  
+        alert("Link para pagamento via cartão pendente de configuração no painel ADM. Você pode fechar o pedido direto no WhatsApp!");  
+        return;  
+      }  
+      window.open(prod.linkCartao, "_blank");  
+    } else if (metodoAtivo === "pix") {  
+      if (!prod.linkPix || prod.linkPix.trim() === "") {  
+        alert("Chave Pix Copia e Cola pendente de configuração. Finalize o pedido direto no WhatsApp!");  
+        return;  
+      }  
+      document.getElementById('area-escolha-pagamento').style.display = 'none';  
+      document.getElementById('area-pix').style.display = 'block';  
+      const qrcodeUrl = `https://quickchart.io/qr?text=${encodeURIComponent(prod.linkPix)}&size=200&margin=2`;  
+      document.getElementById('qrcode-pix').src = qrcodeUrl;  
+      document.getElementById('codigo-pix-input').value = prod.linkPix;  
+    } else {
+      alert("Retirada selecionada! Prossiga no botão abaixo para agendar via WhatsApp.");
+    } 
+  }  
+  
+  function copiarPix() {  
+    const inputPix = document.getElementById('codigo-pix-input');  
+    inputPix.select();  
+    navigator.clipboard.writeText(inputPix.value).then(() => {  
+      alert("✅ Código Pix copiado!");  
+    });  
+  }  
+  
+  function enviarComprovanteWhatsApp() {  
+    const prod = dbProdutos.find(p => p.id === produtoAtivoId);
+    if (!prod) return;  
+    const metodoAtivo = document.getElementById('metodo_pagamento').value;  
+    
+    let metodoTexto = "Pix";  
+    if(metodoAtivo === "cartao") metodoTexto = "Cartão de Crédito";
+    if(metodoAtivo === "dinheiro") metodoTexto = "Dinheiro / Retirada";
+    
+    const mensagem = `Olá WR Acessórios Mobile!%0A%0A*Interesse em Produto*%0AAcessório: ${prod.nome}%0AValor: R$ ${prod.preco}%0AForma: ${metodoTexto}%0A%0AQuero combinar os detalhes de entrega ou retirada!`;  
+    window.open(`https://wa.me/5527997572342?text=${mensagem}`, "_blank"); 
+  }  
+
+  /* 🔐 MOTOR DO PAINEL ADMINISTRATIVO */
+  function contarCliquesAdm() {
+    cliquesTitulo++;
+    if(cliquesTitulo >= 5) {
+        cliquesTitulo = 0;
+        abrirLoginAdm();
+    }
+  }
+
+  function forçarLoginAdm(e) {
+    e.stopPropagation();
+    abrirLoginAdm();
+  }
+
+  function abrirLoginAdm() {
+    const senha = prompt("Insira a Senha do Administrador:");
+    if(senha === "4380") {
+        abrirPainelGerenciador();
+    } else if(senha !== null) {
+        alert("❌ Senha Incorreta!");
+    }
+  }
+
+  function abrirPainelGerenciador() {
+    const container = document.getElementById('lista-produtos-adm');
+    container.innerHTML = "";
+
+    dbProdutos.forEach((p, index) => {
+        const row = document.createElement('div');
+        row.className = "adm-prod-row";
+        row.innerHTML = `
+            <h4>${p.nome}</h4>
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>Preço (R$)</label>
+                    <input type="text" id="adm-preco-${index}" value="${p.preco}">
+                </div>
+                <div class="form-group">
+                    <label>Destaque / Info</label>
+                    <input type="text" id="adm-info-${index}" value="${p.info}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Links das Imagens (Separados por vírgula)</label>
+                <input type="text" id="adm-imgs-${index}" value="${p.imagens.join(', ')}">
+            </div>
+            <div class="form-group">
+                <label>Link de Pagamento Cartão</label>
+                <input type="text" id="adm-cartao-${index}" value="${p.linkCartao || ''}" placeholder="https://link.infinitepay...">
+            </div>
+            <div class="form-group">
+                <label>Código Pix Copia e Cola</label>
+                <input type="text" id="adm-pix-${index}" value="${p.linkPix || ''}" placeholder="00020101021226840014BR...">
+            </div>
+        `;
+        container.appendChild(row);
+    });
+
+    document.getElementById('modalAdm').style.display = 'block';
+  }
+
+  function fecharAdm() { document.getElementById('modalAdm').style.display = 'none'; }
+
+  function salvarConfigAdm() {
+    dbProdutos.forEach((p, index) => {
+        p.preco = document.getElementById(`adm-preco-${index}`).value;
+        p.info = document.getElementById(`adm-info-${index}`).value;
+        
+        let imgsRaw = document.getElementById(`adm-imgs-${index}`).value;
+        p.imagens = imgsRaw.split(',').map(link => link.trim()).filter(link => link !== "");
+        
+        p.linkCartao = document.getElementById(`adm-cartao-${index}`).value;
+        p.linkPix = document.getElementById(`adm-pix-${index}`).value;
+    });
+
+    localStorage.setItem('wr_produtos_db', JSON.stringify(dbProdutos));
+    renderizarVitrine();
+    fecharAdm();
+    alert("✅ Alterações salvas com sucesso neste navegador!");
+  }
+
+  function exportarCodigoCompleto() {
+    // Clona o HTML estrutural atualizando a variável nativa dbProdutos para persistir no arquivo físico do GitHub
+    let stringDb = JSON.stringify(dbProdutos, null, 2);
+    let htmlAtual = document.documentElement.outerHTML;
+    
+    // Atualiza dinamicamente a declaração inicial da variável dentro do script
+    const regexDb = /let dbProdutos = \[\s[\s\S]*?\];/;
+    let novoHtml = htmlAtual.replace(regexDb, `let dbProdutos = ${stringDb};`);
+    
+    // Remove os valores temporários do DOM injetados pelo localStorage antes de salvar limpo
+    navigator.clipboard.writeText("<!DOCTYPE html>\n" + novoHtml).then(() => {
+        alert("📋 CÓDIGO ATUALIZADO COPIADO!\n\nAgora vá no seu GitHub, abra o arquivo 'index.html', clique para editar, apague tudo e cole este novo código!");
+    });
+  }
+  
+  window.onload = carregarSistema;  
+</script>  
+  
+</body>  
+</html>
