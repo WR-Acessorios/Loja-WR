@@ -95,13 +95,15 @@
         .form-group { margin-bottom: 15px; text-align: left; }  
         .form-group label { display: block; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; color: #64748b; }  
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; background: #f8fafc; color: var(--text-main); }  
-        .form-group input:focus { border-color: var(--primary-color); background: white; }
+        .form-group input:focus { border-color: var(--primary-color); background: white; }  
   
         /* PAINEL GERENCIADOR ADM */  
         .adm-box { max-width: 600px !important; }  
-        .adm-prod-row { border-bottom: 1px dashed #cbd5e1; padding: 15px 0; }  
-        .adm-prod-row h4 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 0.95rem; background: #eff6ff; padding: 6px 12px; border-radius: 6px; display: inline-block; }  
+        .adm-prod-row { border-bottom: 2px solid #e2e8f0; padding: 20px 0; position: relative; }  
+        .adm-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .adm-prod-row h4 { margin: 0; color: var(--primary-color); font-size: 0.95rem; background: #eff6ff; padding: 6px 12px; border-radius: 6px; display: inline-block; }  
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }  
+        .btn-excluir { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: bold;}
   
         @media (min-width: 600px) { .vitrine { grid-template-columns: repeat(2, 1fr); } }  
         @media (min-width: 1000px) { .vitrine { grid-template-columns: repeat(3, 1fr); } }  
@@ -183,8 +185,14 @@
   
 <div id="modalAdm" class="modal-checkout">  
   <div class="form-container adm-box">  
-    <h2>Painel do Administrador WR</h2>  
-    <div id="lista-produtos-adm" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;"></div>  
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px;">
+        <h2 style="margin:0; font-size:1.2rem;">Gerenciador WR</h2>  
+        <button onclick="adicionarNovoItemPainel()" style="background: var(--primary-color); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.8rem;">
+            <span class="material-icons" style="font-size:16px;">add</span> NOVO PRODUTO
+        </button>
+    </div>
+    
+    <div id="lista-produtos-adm" style="max-height: 380px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;"></div>  
       
     <button onclick="salvarConfigAdm()" style="width:100%; padding:12px; background:var(--accent-color); color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">💾 SALVAR ALTERAÇÕES</button>  
     <button onclick="exportarCodigoCompleto()" style="width:100%; padding:12px; background:#475569; color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">📋 EXPORTAR CÓDIGO PARA O GITHUB</button>  
@@ -252,12 +260,18 @@
     const vitrine = document.getElementById('container-vitrine-html');  
     vitrine.innerHTML = "";  
       
+    if(dbProdutos.length === 0) {
+        vitrine.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#64748b; padding: 20px;">Nenhum produto cadastrado. Entre no painel ADM para adicionar!</p>`;
+        return;
+    }
+
     dbProdutos.forEach(p => {  
-        carrosselEstado[p.id] = { current: 0, total: p.imagens.length };  
+        const imgsValidas = p.imagens && p.imagens.length > 0 ? p.imagens : ["https://images.unsplash.com/photo-1562408590-e32931084e23?w=500"];
+        carrosselEstado[p.id] = { current: 0, total: imgsValidas.length };  
           
         let imgsHtml = "";  
-        p.imagens.forEach((imgSrc) => {  
-            imgsHtml += `<img src="${imgSrc}" alt="${p.nome}" onclick="abrirImagem('${p.id}', ${p.imagens.indexOf(imgSrc)})">`;  
+        imgsValidas.forEach((imgSrc, i) => {  
+            imgsHtml += `<img src="${imgSrc}" alt="${p.nome}" onclick="abrirImagem('${p.id}', ${i})">`;  
         });  
   
         const card = document.createElement('div');  
@@ -312,7 +326,8 @@
       modal.style.display = 'flex';  
           
       const prod = dbProdutos.find(p => p.id === id);  
-      img.src = prod.imagens[index];  
+      const imgsValidas = prod.imagens && prod.imagens.length > 0 ? prod.imagens : ["https://images.unsplash.com/photo-1562408590-e32931084e23?w=500"];
+      img.src = imgsValidas[index];  
   }  
     
   function fecharImagem() {  
@@ -325,7 +340,8 @@
       indexZoomAtivo = (indexZoomAtivo + step + c.total) % c.total;  
           
       const prod = dbProdutos.find(p => p.id === produtoZoomAtivo);  
-      document.getElementById('imgZoom').src = prod.imagens[indexZoomAtivo];  
+      const imgsValidas = prod.imagens && prod.imagens.length > 0 ? prod.imagens : ["https://images.unsplash.com/photo-1562408590-e32931084e23?w=500"];
+      document.getElementById('imgZoom').src = imgsValidas[indexZoomAtivo];  
           
       c.current = indexZoomAtivo;  
       document.querySelector(`#${produtoZoomAtivo} .carrossel-wrapper`).style.transform = `translateX(-${c.current * 100}%)`;  
@@ -353,7 +369,7 @@
       
     if (metodoAtivo === "cartao") {  
       if (!prod.linkCartao || prod.linkCartao.trim() === "") {  
-        alert("Link para pagamento via cartão pendente de configuração no painel ADM. Você pode fechar o pedido direto no WhatsApp!");  
+        alert("Link para pagamento via cartão pendente de configuração. Você pode fechar o pedido direto no WhatsApp!");  
         return;  
       }  
       window.open(prod.linkCartao, "_blank");  
@@ -392,7 +408,7 @@
     const mensagem = `Olá WR Acessórios Mobile!%0A%0A*Interesse em Produto*%0AAcessório: ${prod.nome}%0AValor: R$ ${prod.preco}%0AForma: ${metodoTexto}%0A%0AQuero combinar os detalhes de entrega ou retirada!`;  
     window.open(`https://wa.me/5527997572342?text=${mensagem}`, "_blank");  
   }  
-  
+
   /* 🔐 MOTOR DO PAINEL ADMINISTRATIVO */  
   function contarCliquesAdm() {  
     cliquesTitulo++;  
@@ -421,63 +437,116 @@
     container.innerHTML = "";  
   
     dbProdutos.forEach((p, index) => {  
-        const row = document.createElement('div');  
-        row.className = "adm-prod-row";  
-        row.innerHTML = `  
-            <div class="form-group" style="margin-bottom: 8px;">  
-                <label style="color: var(--primary-color);">Nome do Produto</label>  
-                <input type="text" id="adm-nome-${index}" value="${p.nome}" style="font-weight: bold; background: #fff;">  
-            </div>  
-            <div class="grid-inputs">  
-                <div class="form-group">  
-                    <label>Preço (R$)</label>  
-                    <input type="text" id="adm-preco-${index}" value="${p.preco}">  
-                </div>  
-                <div class="form-group">  
-                    <label>Destaque / Info</label>  
-                    <input type="text" id="adm-info-${index}" value="${p.info}">  
-                </div>  
-            </div>  
-            <div class="form-group">  
-                <label>Links das Imagens (Separados por vírgula)</label>  
-                <input type="text" id="adm-imgs-${index}" value="${p.imagens.join(', ')}">  
-            </div>  
-            <div class="grid-inputs">
-                <div class="form-group">  
-                    <label>Link Cartão</label>  
-                    <input type="text" id="adm-cartao-${index}" value="${p.linkCartao || ''}" placeholder="https://...">  
-                </div>  
-                <div class="form-group">  
-                    <label>Código Pix</label>  
-                    <input type="text" id="adm-pix-${index}" value="${p.linkPix || ''}" placeholder="000201...">  
-                </div>  
-            </div>
-        `;  
-        container.appendChild(row);  
+        container.appendChild(criarEstruturaFormItem(p, index));  
     });  
   
     document.getElementById('modalAdm').style.display = 'block';  
   }  
+
+  function criarEstruturaFormItem(p, index) {
+    const row = document.createElement('div');  
+    row.className = "adm-prod-row";  
+    row.id = `adm-row-item-${index}`;
+    row.innerHTML = `  
+        <div class="adm-header-row">
+            <h4>Produto #${index + 1}</h4>
+            <button class="btn-excluir" onclick="removerItemDoPainel(${index})"><span class="material-icons" style="font-size:14px;">delete</span> EXCLUIR</button>
+        </div>
+        <div class="form-group" style="margin-bottom: 8px;">  
+            <label style="color: var(--primary-color);">Nome do Produto</label>  
+            <input type="text" class="input-adm-nome" value="${p.nome}" style="font-weight: bold; background: #fff;">  
+        </div>  
+        <div class="grid-inputs">  
+            <div class="form-group">  
+                <label>Preço (R$)</label>  
+                <input type="text" class="input-adm-preco" value="${p.preco}">  
+            </div>  
+            <div class="form-group">  
+                <label>Destaque / Info</label>  
+                <input type="text" class="input-adm-info" value="${p.info}">  
+            </div>  
+        </div>  
+        <div class="form-group">  
+            <label>Links das Imagens (Separados por vírgula)</label>  
+            <input type="text" class="input-adm-imgs" value="${p.imagens.join(', ')}">  
+        </div>  
+        <div class="grid-inputs">
+            <div class="form-group">  
+                <label>Link Cartão</label>  
+                <input type="text" class="input-adm-cartao" value="${p.linkCartao || ''}" placeholder="https://...">  
+            </div>  
+            <div class="form-group">  
+                <label>Código Pix</label>  
+                <input type="text" class="input-adm-pix" value="${p.linkPix || ''}" placeholder="000201...">  
+            </div>  
+        </div>  
+    `;
+    return row;
+  }
+
+  function adicionarNovoItemPainel() {
+    const novoObj = {
+        id: "prod_" + Date.now(),
+        nome: "Novo Acessório",
+        preco: "0,00",
+        info: "Garantia e Qualidade",
+        imagens: [],
+        linkCartao: "",
+        linkPix: ""
+    };
+    dbProdutos.push(novoObj);
+    
+    const container = document.getElementById('lista-produtos-adm');
+    const novoIndex = dbProdutos.length - 1;
+    container.appendChild(criarEstruturaFormItem(novoObj, novoIndex));
+    
+    // Rola a caixinha para o final para mostrar o novo item preenchível
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function removerItemDoPainel(index) {
+    if(confirm("Tem certeza que deseja apagar este produto do catálogo?")) {
+        dbProdutos.splice(index, 1);
+        // Atualiza a tela do painel para refazer a numeração dos índices
+        abrirPainelGerenciador();
+    }
+  }
   
   function fecharAdm() { document.getElementById('modalAdm').style.display = 'none'; }  
   
   function salvarConfigAdm() {  
-    dbProdutos.forEach((p, index) => {  
-        p.nome = document.getElementById(`adm-nome-${index}`).value;  
-        p.preco = document.getElementById(`adm-preco-${index}`).value;  
-        p.info = document.getElementById(`adm-info-${index}`).value;  
-          
-        let imgsRaw = document.getElementById(`adm-imgs-${index}`).value;  
-        p.imagens = imgsRaw.split(',').map(link => link.trim()).filter(link => link !== "");  
-          
-        p.linkCartao = document.getElementById(`adm-cartao-${index}`).value;  
-        p.linkPix = document.getElementById(`adm-pix-${index}`).value;  
-    });  
-  
+    const linhas = document.querySelectorAll('.adm-prod-row');
+    const novoDb = [];
+
+    linhas.forEach((linha, index) => {
+        const nome = linha.querySelector('.input-adm-nome').value;
+        const preco = linha.querySelector('.input-adm-preco').value;
+        const info = linha.querySelector('.input-adm-info').value;
+        const imgsRaw = linha.querySelector('.input-adm-imgs').value;
+        const linkCartao = linha.querySelector('.input-adm-cartao').value;
+        const linkPix = linha.querySelector('.input-adm-pix').value;
+
+        const imgsArr = imgsRaw.split(',').map(link => link.trim()).filter(link => link !== "");
+        
+        // Mantém o ID antigo estável se ele já existia, senão gera um com base na ordem/tempo
+        const idExistente = dbProdutos[index] ? dbProdutos[index].id : "prod_" + (Date.now() + index);
+
+        novoDb.push({
+            id: idExistente,
+            nome: nome,
+            preco: preco,
+            info: info,
+            imagens: imgsArr,
+            linkCartao: linkCartao,
+            linkPix: linkPix
+        });
+    });
+
+    dbProdutos = novoDb;
     localStorage.setItem('wr_produtos_db', JSON.stringify(dbProdutos));  
     renderizarVitrine();  
     fecharAdm();  
-    alert("✅ Alterações salvas com sucesso neste navegador!");  
+    alert("✅ Alterações e novos itens salvos com sucesso neste navegador!");  
   }  
   
   function exportarCodigoCompleto() {  
@@ -488,7 +557,7 @@
     let novoHtml = htmlAtual.replace(regexDb, `let dbProdutos = ${stringDb};`);  
       
     navigator.clipboard.writeText("<!DOCTYPE html>\n" + novoHtml).then(() => {  
-        alert("📋 CÓDIGO ATUALIZADO COPIADO!\n\nAgora vá ao seu GitHub, abra o arquivo 'index.html', clique para editar, apague tudo e cole este novo código!");  
+        alert("📋 CÓDIGO ATUALIZADO COPIADO!\n\nAgora vá ao seu GitHub, abra o arquivo 'index.html', clique para editar, apague tudo e cole este novo código para fixar os novos produtos para todos os clientes!");  
     });  
   }  
     
