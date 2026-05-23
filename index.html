@@ -28,9 +28,9 @@
             display: flex; flex-direction: column; align-items: center;  
             position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.15);  
         }  
-        .header-title-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+        .header-title-container { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }  
         header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 1px; font-weight: 800; }  
-        .adm-trigger { opacity: 0.1; font-size: 18px; color: white; background: none; border: none; cursor: pointer; }
+        .adm-trigger { opacity: 0.1; font-size: 18px; color: white; background: none; border: none; cursor: pointer; }  
         nav ul { list-style: none; margin: 10px 0 0 0; padding: 0; display: flex; gap: 15px; }  
         nav a { text-decoration: none; color: #cbd5e1; font-weight: 500; font-size: 0.9rem; }  
   
@@ -53,7 +53,7 @@
             padding: 15px; text-align: center; display: flex; flex-direction: column; position: relative;  
             border: 1px solid #e2e8f0;  
         }  
-        .produto-card h3 { font-size: 1.1rem; margin: 12px 0 6px 0; color: var(--text-main); }  
+        .produto-card h3 { font-size: 1.1rem; margin: 12px 0 6px 0; color: var(--text-main); line-height: 1.3; min-height: 44px; display: flex; align-items: center; justify-content: center; }  
         .carrossel-container { position: relative; width: 100%; overflow: hidden; border-radius: 12px; }  
         .carrossel-wrapper { display: flex; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; }  
         .carrossel-wrapper img { width: 100%; flex-shrink: 0; height: 220px; object-fit: contain; cursor: pointer; padding: 10px; background: #f8fafc; }  
@@ -94,13 +94,14 @@
           
         .form-group { margin-bottom: 15px; text-align: left; }  
         .form-group label { display: block; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; color: #64748b; }  
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; background: #f8fafc; }  
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; background: #f8fafc; color: var(--text-main); }  
+        .form-group input:focus { border-color: var(--primary-color); background: white; }
   
-        /* PAINEL GERENCIADOR ADM */
-        .adm-box { max-width: 600px !important; }
-        .adm-prod-row { border-bottom: 1px dashed #cbd5e1; padding: 15px 0; }
-        .adm-prod-row h4 { margin: 0 0 10px 0; color: var(--primary-color); }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+        /* PAINEL GERENCIADOR ADM */  
+        .adm-box { max-width: 600px !important; }  
+        .adm-prod-row { border-bottom: 1px dashed #cbd5e1; padding: 15px 0; }  
+        .adm-prod-row h4 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 0.95rem; background: #eff6ff; padding: 6px 12px; border-radius: 6px; display: inline-block; }  
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }  
   
         @media (min-width: 600px) { .vitrine { grid-template-columns: repeat(2, 1fr); } }  
         @media (min-width: 1000px) { .vitrine { grid-template-columns: repeat(3, 1fr); } }  
@@ -109,10 +110,10 @@
 <body>  
   
 <header>  
-    <div class="header-title-container" onclick="contarCliquesAdm()">
+    <div class="header-title-container" onclick="contarCliquesAdm()">  
         <h1>WR ACESSÓRIOS MOBILE</h1>   
-        <button class="adm-trigger" onclick="forçarLoginAdm(event)"><span class="material-icons">settings</span></button>
-    </div>
+        <button class="adm-trigger" onclick="forçarLoginAdm(event)"><span class="material-icons">settings</span></button>  
+    </div>  
     <nav>  
         <ul>  
             <li><a href="#home">Início</a></li>  
@@ -156,7 +157,7 @@
         </select>  
       </div>  
       <button onclick="processarPagamento()" style="width:100%; padding:14px; border:none; border-radius:10px; background:var(--primary-color); color:#fff; font-weight:bold; cursor:pointer;">  
-        Avançar para o Link / Código
+        Avançar para o Link / Código  
       </button>  
     </div>  
   
@@ -180,93 +181,93 @@
   </div>  
 </div>  
   
-<div id="modalAdm" class="modal-checkout">
-  <div class="form-container adm-box">
-    <h2>Painel do Administrador WR</h2>
-    <div id="lista-produtos-adm" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;"></div>
-    
-    <button onclick="salvarConfigAdm()" style="width:100%; padding:12px; background:var(--accent-color); color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">💾 SALVAR ALTERAÇÕES</button>
-    <button onclick="exportarCodigoCompleto()" style="width:100%; padding:12px; background:#475569; color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">📋 EXPORTAR CÓDIGO PARA O GITHUB</button>
-    <button onclick="fecharAdm()" style="width:100%; padding:8px; background:none; border:none; color:#64748b; cursor:pointer;">Fechar Painel</button>
-  </div>
-</div>
-
+<div id="modalAdm" class="modal-checkout">  
+  <div class="form-container adm-box">  
+    <h2>Painel do Administrador WR</h2>  
+    <div id="lista-produtos-adm" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;"></div>  
+      
+    <button onclick="salvarConfigAdm()" style="width:100%; padding:12px; background:var(--accent-color); color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">💾 SALVAR ALTERAÇÕES</button>  
+    <button onclick="exportarCodigoCompleto()" style="width:100%; padding:12px; background:#475569; color:white; font-weight:bold; border:none; border-radius:10px; cursor:pointer; margin-bottom:10px;">📋 EXPORTAR CÓDIGO PARA O GITHUB</button>  
+    <button onclick="fecharAdm()" style="width:100%; padding:8px; background:none; border:none; color:#64748b; cursor:pointer;">Fechar Painel</button>  
+  </div>  
+</div>  
+  
 <script>  
-  // BANCO DE DADOS LOCAL DOS PRODUTOS (Pode ser alterado totalmente pelo painel)
-  let dbProdutos = [
-    {
-      id: "carregador20w",
-      nome: "Carregador Turbo 20W Type-C",
-      preco: "59,90",
-      info: "Garantia de alta performance",
-      imagens: ["carregador20w_1.webp", "carregador20w_2.webp"],
-      linkCartao: "",
-      linkPix: ""
-    },
-    {
-      id: "carregadoragold",
-      nome: "Carregador Completo aGold",
-      preco: "99,90",
-      info: "Acompanha cabo reforçado",
-      imagens: ["carregador-agold.jpeg"],
-      linkCartao: "",
-      linkPix: ""
-    },
-    {
-      id: "caboreforcado",
-      nome: "Cabo Reforçado de Nylon",
-      preco: "29,90",
-      info: "Alta durabilidade e velocidade",
-      imagens: ["cabo_reforcado.webp"],
-      linkCartao: "",
-      linkPix: ""
-    },
-    {
-      id: "capamagsafe",
-      nome: "Capa MagSafe Premium",
-      preco: "105,90",
-      info: "Proteção contra impactos com magnetismo",
-      imagens: ["capa-magsafe-iphone-17pro.webp"],
-      linkCartao: "",
-      linkPix: ""
-    }
-  ];
-
-  // Estado dos carrosséis
+  // BANCO DE DADOS LOCAL DOS PRODUTOS
+  let dbProdutos = [  
+    {  
+      id: "carregador20w",  
+      nome: "Carregador Turbo 20W Type-C",  
+      preco: "59,90",  
+      info: "Garantia de alta performance",  
+      imagens: ["carregador20w_1.webp", "carregador20w_2.webp"],  
+      linkCartao: "",  
+      linkPix: ""  
+    },  
+    {  
+      id: "carregadoragold",  
+      nome: "Carregador Completo aGold",  
+      preco: "99,90",  
+      info: "Acompanha cabo reforçado",  
+      imagens: ["carregador-agold.jpeg"],  
+      linkCartao: "",  
+      linkPix: ""  
+    },  
+    {  
+      id: "caboreforcado",  
+      nome: "Cabo Reforçado de Nylon",  
+      preco: "29,90",  
+      info: "Alta durabilidade e velocidade",  
+      imagens: ["cabo_reforcado.webp"],  
+      linkCartao: "",  
+      linkPix: ""  
+    },  
+    {  
+      id: "capamagsafe",  
+      nome: "Capa MagSafe Premium",  
+      preco: "105,90",  
+      info: "Proteção contra impactos com magnetismo",  
+      imagens: ["capa-magsafe-iphone-17pro.webp"],  
+      linkCartao: "",  
+      linkPix: ""  
+    }  
+  ];  
+  
+  // Estado dos carrosséis  
   let carrosselEstado = {};  
   let produtoZoomAtivo = "";  
   let indexZoomAtivo = 0;  
   let produtoAtivoId = "";  
-  let cliquesTitulo = 0;
-
-  // Inicialização do Sistema
-  function carregarSistema() {
-    if(localStorage.getItem('wr_produtos_db')) {
-        dbProdutos = JSON.parse(localStorage.getItem('wr_produtos_db'));
-    }
-    renderizarVitrine();
-  }
-
-  function renderizarVitrine() {
-    const vitrine = document.getElementById('container-vitrine-html');
-    vitrine.innerHTML = "";
-    
-    dbProdutos.forEach(p => {
-        carrosselEstado[p.id] = { current: 0, total: p.imagens.length };
-        
-        let imgsHtml = "";
-        p.imagens.forEach((imgSrc) => {
-            imgsHtml += `<img src="${imgSrc}" alt="${p.nome}" onclick="abrirImagem('${p.id}', ${p.imagens.indexOf(imgSrc)})">`;
-        });
-
-        const card = document.createElement('div');
-        card.className = "produto-card";
-        card.id = p.id;
-        card.innerHTML = `
+  let cliquesTitulo = 0;  
+  
+  // Inicialização do Sistema  
+  function carregarSistema() {  
+    if(localStorage.getItem('wr_produtos_db')) {  
+        dbProdutos = JSON.parse(localStorage.getItem('wr_produtos_db'));  
+    }  
+    renderizarVitrine();  
+  }  
+  
+  function renderizarVitrine() {  
+    const vitrine = document.getElementById('container-vitrine-html');  
+    vitrine.innerHTML = "";  
+      
+    dbProdutos.forEach(p => {  
+        carrosselEstado[p.id] = { current: 0, total: p.imagens.length };  
+          
+        let imgsHtml = "";  
+        p.imagens.forEach((imgSrc) => {  
+            imgsHtml += `<img src="${imgSrc}" alt="${p.nome}" onclick="abrirImagem('${p.id}', ${p.imagens.indexOf(imgSrc)})">`;  
+        });  
+  
+        const card = document.createElement('div');  
+        card.className = "produto-card";  
+        card.id = p.id;  
+        card.innerHTML = `  
             <div class="carrossel-container">  
                 <button class="nav-btn prev" onclick="moveSlide('${p.id}', -1)"><span class="material-icons">chevron_left</span></button>  
                 <div class="carrossel-wrapper" style="transform: translateX(0%);">  
-                    ${imgsHtml}
+                    ${imgsHtml}  
                 </div>  
                 <button class="nav-btn next" onclick="moveSlide('${p.id}', 1)"><span class="material-icons">chevron_right</span></button>  
             </div>  
@@ -276,63 +277,63 @@
             <div class="parcelas-info">${p.info}</div>  
             <button class="btn-comprar" onclick="abrirCheckout('${p.id}')">  
                 <span class="material-icons">shopping_cart</span> ADQUIRIR AGORA  
-            </button>
-        `;
-        vitrine.appendChild(card);
-        atualizarDots(p.id);
-    });
-  }
-
+            </button>  
+        `;  
+        vitrine.appendChild(card);  
+        atualizarDots(p.id);  
+    });  
+  }  
+  
   function moveSlide(id, step) {  
     const c = carrosselEstado[id];  
-    if(!c || c.total <= 1) return;
+    if(!c || c.total <= 1) return;  
     c.current = (c.current + step + c.total) % c.total;  
     document.querySelector(`#${id} .carrossel-wrapper`).style.transform = `translateX(-${c.current * 100}%)`;  
-    atualizarDots(id);
+    atualizarDots(id);  
   }  
-
-  function atualizarDots(id) {
-    const dotsContainer = document.getElementById(`dots-${id}`);
-    if(!dotsContainer) return;
-    dotsContainer.innerHTML = "";
-    const c = carrosselEstado[id];
+  
+  function atualizarDots(id) {  
+    const dotsContainer = document.getElementById(`dots-${id}`);  
+    if(!dotsContainer) return;  
+    dotsContainer.innerHTML = "";  
+    const c = carrosselEstado[id];  
     for (let i = 0; i < c.total; i++) {  
         const dot = document.createElement('div');  
         dot.className = `dot ${i === c.current ? 'active' : ''}`;  
         dotsContainer.appendChild(dot);  
-    }
-  }
-
+    }  
+  }  
+  
   function abrirImagem(id, index) {  
       produtoZoomAtivo = id;  
       indexZoomAtivo = index;  
       const modal = document.getElementById('modalImagem');  
       const img = document.getElementById('imgZoom');  
       modal.style.display = 'flex';  
-        
-      const prod = dbProdutos.find(p => p.id === id);
+          
+      const prod = dbProdutos.find(p => p.id === id);  
       img.src = prod.imagens[index];  
   }  
-  
+    
   function fecharImagem() {  
       document.getElementById('modalImagem').style.display = 'none';  
   }  
-  
+    
   function mudarImagemZoom(step, event) {  
       if (event) event.stopPropagation();  
       const c = carrosselEstado[produtoZoomAtivo];  
       indexZoomAtivo = (indexZoomAtivo + step + c.total) % c.total;  
-        
-      const prod = dbProdutos.find(p => p.id === produtoZoomAtivo);
+          
+      const prod = dbProdutos.find(p => p.id === produtoZoomAtivo);  
       document.getElementById('imgZoom').src = prod.imagens[indexZoomAtivo];  
-        
+          
       c.current = indexZoomAtivo;  
       document.querySelector(`#${produtoZoomAtivo} .carrossel-wrapper`).style.transform = `translateX(-${c.current * 100}%)`;  
-      atualizarDots(produtoZoomAtivo);
+      atualizarDots(produtoZoomAtivo);  
   }  
-  
+    
   function abrirCheckout(id) {  
-    const prod = dbProdutos.find(p => p.id === id);
+    const prod = dbProdutos.find(p => p.id === id);  
     produtoAtivoId = id;  
     document.getElementById('titulo-checkout').innerText = prod.nome;  
     document.getElementById('resumo-valor').innerText = "Valor: R$ " + prod.preco;  
@@ -341,15 +342,15 @@
     document.getElementById('area-pix').style.display = 'none';  
     document.getElementById('modalCheckout').style.display = 'block';  
   }  
-  
+    
   function fecharCheckout() {  
     document.getElementById('modalCheckout').style.display = 'none';  
   }  
-  
-  function processarPagamento() {  
-    const prod = dbProdutos.find(p => p.id === produtoAtivoId);
-    const metodoAtivo = document.getElementById('metodo_pagamento').value;  
     
+  function processarPagamento() {  
+    const prod = dbProdutos.find(p => p.id === produtoAtivoId);  
+    const metodoAtivo = document.getElementById('metodo_pagamento').value;  
+      
     if (metodoAtivo === "cartao") {  
       if (!prod.linkCartao || prod.linkCartao.trim() === "") {  
         alert("Link para pagamento via cartão pendente de configuração no painel ADM. Você pode fechar o pedido direto no WhatsApp!");  
@@ -366,11 +367,11 @@
       const qrcodeUrl = `https://quickchart.io/qr?text=${encodeURIComponent(prod.linkPix)}&size=200&margin=2`;  
       document.getElementById('qrcode-pix').src = qrcodeUrl;  
       document.getElementById('codigo-pix-input').value = prod.linkPix;  
-    } else {
-      alert("Retirada selecionada! Prossiga no botão abaixo para agendar via WhatsApp.");
-    } 
+    } else {  
+      alert("Retirada selecionada! Prossiga no botão abaixo para agendar via WhatsApp.");  
+    }   
   }  
-  
+    
   function copiarPix() {  
     const inputPix = document.getElementById('codigo-pix-input');  
     inputPix.select();  
@@ -378,116 +379,119 @@
       alert("✅ Código Pix copiado!");  
     });  
   }  
-  
+    
   function enviarComprovanteWhatsApp() {  
-    const prod = dbProdutos.find(p => p.id === produtoAtivoId);
+    const prod = dbProdutos.find(p => p.id === produtoAtivoId);  
     if (!prod) return;  
     const metodoAtivo = document.getElementById('metodo_pagamento').value;  
-    
+      
     let metodoTexto = "Pix";  
-    if(metodoAtivo === "cartao") metodoTexto = "Cartão de Crédito";
-    if(metodoAtivo === "dinheiro") metodoTexto = "Dinheiro / Retirada";
-    
+    if(metodoAtivo === "cartao") metodoTexto = "Cartão de Crédito";  
+    if(metodoAtivo === "dinheiro") metodoTexto = "Dinheiro / Retirada";  
+      
     const mensagem = `Olá WR Acessórios Mobile!%0A%0A*Interesse em Produto*%0AAcessório: ${prod.nome}%0AValor: R$ ${prod.preco}%0AForma: ${metodoTexto}%0A%0AQuero combinar os detalhes de entrega ou retirada!`;  
-    window.open(`https://wa.me/5527997572342?text=${mensagem}`, "_blank"); 
+    window.open(`https://wa.me/5527997572342?text=${mensagem}`, "_blank");  
   }  
-
-  /* 🔐 MOTOR DO PAINEL ADMINISTRATIVO */
-  function contarCliquesAdm() {
-    cliquesTitulo++;
-    if(cliquesTitulo >= 5) {
-        cliquesTitulo = 0;
-        abrirLoginAdm();
-    }
-  }
-
-  function forçarLoginAdm(e) {
-    e.stopPropagation();
-    abrirLoginAdm();
-  }
-
-  function abrirLoginAdm() {
-    const senha = prompt("Insira a Senha do Administrador:");
-    if(senha === "4380") {
-        abrirPainelGerenciador();
-    } else if(senha !== null) {
-        alert("❌ Senha Incorreta!");
-    }
-  }
-
-  function abrirPainelGerenciador() {
-    const container = document.getElementById('lista-produtos-adm');
-    container.innerHTML = "";
-
-    dbProdutos.forEach((p, index) => {
-        const row = document.createElement('div');
-        row.className = "adm-prod-row";
-        row.innerHTML = `
-            <h4>${p.nome}</h4>
-            <div class="grid-inputs">
-                <div class="form-group">
-                    <label>Preço (R$)</label>
-                    <input type="text" id="adm-preco-${index}" value="${p.preco}">
-                </div>
-                <div class="form-group">
-                    <label>Destaque / Info</label>
-                    <input type="text" id="adm-info-${index}" value="${p.info}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Links das Imagens (Separados por vírgula)</label>
-                <input type="text" id="adm-imgs-${index}" value="${p.imagens.join(', ')}">
-            </div>
-            <div class="form-group">
-                <label>Link de Pagamento Cartão</label>
-                <input type="text" id="adm-cartao-${index}" value="${p.linkCartao || ''}" placeholder="https://link.infinitepay...">
-            </div>
-            <div class="form-group">
-                <label>Código Pix Copia e Cola</label>
-                <input type="text" id="adm-pix-${index}" value="${p.linkPix || ''}" placeholder="00020101021226840014BR...">
-            </div>
-        `;
-        container.appendChild(row);
-    });
-
-    document.getElementById('modalAdm').style.display = 'block';
-  }
-
-  function fecharAdm() { document.getElementById('modalAdm').style.display = 'none'; }
-
-  function salvarConfigAdm() {
-    dbProdutos.forEach((p, index) => {
-        p.preco = document.getElementById(`adm-preco-${index}`).value;
-        p.info = document.getElementById(`adm-info-${index}`).value;
-        
-        let imgsRaw = document.getElementById(`adm-imgs-${index}`).value;
-        p.imagens = imgsRaw.split(',').map(link => link.trim()).filter(link => link !== "");
-        
-        p.linkCartao = document.getElementById(`adm-cartao-${index}`).value;
-        p.linkPix = document.getElementById(`adm-pix-${index}`).value;
-    });
-
-    localStorage.setItem('wr_produtos_db', JSON.stringify(dbProdutos));
-    renderizarVitrine();
-    fecharAdm();
-    alert("✅ Alterações salvas com sucesso neste navegador!");
-  }
-
-  function exportarCodigoCompleto() {
-    // Clona o HTML estrutural atualizando a variável nativa dbProdutos para persistir no arquivo físico do GitHub
-    let stringDb = JSON.stringify(dbProdutos, null, 2);
-    let htmlAtual = document.documentElement.outerHTML;
-    
-    // Atualiza dinamicamente a declaração inicial da variável dentro do script
-    const regexDb = /let dbProdutos = \[\s[\s\S]*?\];/;
-    let novoHtml = htmlAtual.replace(regexDb, `let dbProdutos = ${stringDb};`);
-    
-    // Remove os valores temporários do DOM injetados pelo localStorage antes de salvar limpo
-    navigator.clipboard.writeText("<!DOCTYPE html>\n" + novoHtml).then(() => {
-        alert("📋 CÓDIGO ATUALIZADO COPIADO!\n\nAgora vá no seu GitHub, abra o arquivo 'index.html', clique para editar, apague tudo e cole este novo código!");
-    });
-  }
   
+  /* 🔐 MOTOR DO PAINEL ADMINISTRATIVO */  
+  function contarCliquesAdm() {  
+    cliquesTitulo++;  
+    if(cliquesTitulo >= 5) {  
+        cliquesTitulo = 0;  
+        abrirLoginAdm();  
+    }  
+  }  
+  
+  function forçarLoginAdm(e) {  
+    e.stopPropagation();  
+    abrirLoginAdm();  
+  }  
+  
+  function abrirLoginAdm() {  
+    const senha = prompt("Insira a Senha do Administrador:");  
+    if(senha === "4380") {  
+        abrirPainelGerenciador();  
+    } else if(senha !== null) {  
+        alert("❌ Senha Incorreta!");  
+    }  
+  }  
+  
+  function abrirPainelGerenciador() {  
+    const container = document.getElementById('lista-produtos-adm');  
+    container.innerHTML = "";  
+  
+    dbProdutos.forEach((p, index) => {  
+        const row = document.createElement('div');  
+        row.className = "adm-prod-row";  
+        row.innerHTML = `  
+            <div class="form-group" style="margin-bottom: 8px;">  
+                <label style="color: var(--primary-color);">Nome do Produto</label>  
+                <input type="text" id="adm-nome-${index}" value="${p.nome}" style="font-weight: bold; background: #fff;">  
+            </div>  
+            <div class="grid-inputs">  
+                <div class="form-group">  
+                    <label>Preço (R$)</label>  
+                    <input type="text" id="adm-preco-${index}" value="${p.preco}">  
+                </div>  
+                <div class="form-group">  
+                    <label>Destaque / Info</label>  
+                    <input type="text" id="adm-info-${index}" value="${p.info}">  
+                </div>  
+            </div>  
+            <div class="form-group">  
+                <label>Links das Imagens (Separados por vírgula)</label>  
+                <input type="text" id="adm-imgs-${index}" value="${p.imagens.join(', ')}">  
+            </div>  
+            <div class="grid-inputs">
+                <div class="form-group">  
+                    <label>Link Cartão</label>  
+                    <input type="text" id="adm-cartao-${index}" value="${p.linkCartao || ''}" placeholder="https://...">  
+                </div>  
+                <div class="form-group">  
+                    <label>Código Pix</label>  
+                    <input type="text" id="adm-pix-${index}" value="${p.linkPix || ''}" placeholder="000201...">  
+                </div>  
+            </div>
+        `;  
+        container.appendChild(row);  
+    });  
+  
+    document.getElementById('modalAdm').style.display = 'block';  
+  }  
+  
+  function fecharAdm() { document.getElementById('modalAdm').style.display = 'none'; }  
+  
+  function salvarConfigAdm() {  
+    dbProdutos.forEach((p, index) => {  
+        p.nome = document.getElementById(`adm-nome-${index}`).value;  
+        p.preco = document.getElementById(`adm-preco-${index}`).value;  
+        p.info = document.getElementById(`adm-info-${index}`).value;  
+          
+        let imgsRaw = document.getElementById(`adm-imgs-${index}`).value;  
+        p.imagens = imgsRaw.split(',').map(link => link.trim()).filter(link => link !== "");  
+          
+        p.linkCartao = document.getElementById(`adm-cartao-${index}`).value;  
+        p.linkPix = document.getElementById(`adm-pix-${index}`).value;  
+    });  
+  
+    localStorage.setItem('wr_produtos_db', JSON.stringify(dbProdutos));  
+    renderizarVitrine();  
+    fecharAdm();  
+    alert("✅ Alterações salvas com sucesso neste navegador!");  
+  }  
+  
+  function exportarCodigoCompleto() {  
+    let stringDb = JSON.stringify(dbProdutos, null, 2);  
+    let htmlAtual = document.documentElement.outerHTML;  
+      
+    const regexDb = /let dbProdutos = \[\s[\s\S]*?\];/;  
+    let novoHtml = htmlAtual.replace(regexDb, `let dbProdutos = ${stringDb};`);  
+      
+    navigator.clipboard.writeText("<!DOCTYPE html>\n" + novoHtml).then(() => {  
+        alert("📋 CÓDIGO ATUALIZADO COPIADO!\n\nAgora vá ao seu GitHub, abra o arquivo 'index.html', clique para editar, apague tudo e cole este novo código!");  
+    });  
+  }  
+    
   window.onload = carregarSistema;  
 </script>  
   
